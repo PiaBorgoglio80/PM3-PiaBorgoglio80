@@ -1,17 +1,37 @@
+
 import { Request, Response } from "express";
-import { createUserService, getUserService, deleteUserService } from "../services/userService";
-import IUser from "../interfaces/IUser";
+import { 
+  createUserService, 
+  getUserService, 
+  deleteUserService, 
+  getUserByIdService 
+} from "../services/userService";
+import { User } from "../entities/User";  
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, active } = req.body;
+    const { name, email, active, birthdate, nDni, credentialsId } = req.body;
 
-    if (!name || !email || typeof active !== "boolean") {
+    if (!name || !email || typeof active !== "boolean" || !birthdate || !nDni || !credentialsId) {
       res.status(400).json({ message: "Missing or invalid data." });
       return;
     }
 
-    const newUser: IUser = await createUserService({ name, email, active });
+    const parsedBirthdate = new Date(birthdate);
+    if (isNaN(parsedBirthdate.getTime())) {
+      res.status(400).json({ message: "Invalid date format." });
+      return;
+    }
+
+    const newUser: User = await createUserService({
+      name,
+      email,
+      active,
+      birthdate: parsedBirthdate,
+      nDni,
+      credentialsId,
+    });
+
     res.status(201).json(newUser);
   } catch (error) {
     console.error(error);
@@ -21,7 +41,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users: IUser[] = await getUserService();
+    const users: User[] = await getUserService();
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -38,8 +58,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const users = await getUserService();
-    const user = users.find(user => user.id === Number(id));
+    const user: User | null = await getUserByIdService(Number(id));
 
     if (!user) {
       res.status(404).json({ message: "User not found." });
@@ -62,10 +81,9 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const users = await getUserService();
-    const userExists = users.some(user => user.id === Number(id));
+    const user: User | null = await getUserByIdService(Number(id));
 
-    if (!userExists) {
+    if (!user) {
       res.status(404).json({ message: "User not found." });
       return;
     }
@@ -77,6 +95,114 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: "Error deleting user." });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
