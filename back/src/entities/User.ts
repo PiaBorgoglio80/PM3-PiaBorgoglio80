@@ -1,30 +1,29 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { Credentials } from "./Credentials";
 
-@Entity({
-    name: "users"
-})
+@Entity({ name: "users" })
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-export class User{
-        @PrimaryGeneratedColumn()
-        id: number
+  @Column({ length: 100 })
+  name: string;
 
-        @Column({
-            length: 100
-        })
-        name: string 
+  @Column()
+  email: string;
 
-        @Column()
-        email: string
+  @Column()
+  birthdate: Date;
 
-        @Column()
-        birthdate: Date
+  @Column()
+  nDni: string;
 
-        @Column()
-        nDni: string
+  @Column()
+  active: boolean;
 
-        @Column()
-        credentialsId: number
+@OneToOne(() => Credentials, { nullable: false, cascade: true }) 
+@JoinColumn({ name: "credentialsId" }) 
+credentials: Credentials;
 
-        @Column() 
-        active: boolean
 }
+

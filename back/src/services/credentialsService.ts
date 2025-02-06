@@ -6,9 +6,17 @@ const credentialRepository = AppDataSource.getRepository(Credentials);
 
 export const createCredentialService = async (
   credentialData: CredentialDto
-): Promise<number> => {
+): Promise<Credentials> => {
   if (!credentialData.username || !credentialData.password) {
     throw new Error("Username and password are required.");
+  }
+
+  const existingCredential = await credentialRepository.findOne({
+    where: { username: credentialData.username },
+  });
+
+  if (existingCredential) {
+    throw new Error("El nombre de usuario ya está en uso.");
   }
 
   try {
@@ -18,7 +26,8 @@ export const createCredentialService = async (
     });
 
     await credentialRepository.save(newCredential);
-    return newCredential.id;
+    console.log("Credenciales creadas:", newCredential);
+    return newCredential;  
   } catch (error) {
     console.error(error);
     throw new Error("Error creating credential.");
@@ -27,136 +36,23 @@ export const createCredentialService = async (
 
 export const validateCredentialService = async (
   credentialData: CredentialDto
-): Promise<number | null> => {
-  if (!credentialData.username || !credentialData.password) {
-    throw new Error("Username and password are required.");
+): Promise<Credentials | null> => {
+  const { username, password } = credentialData;
+
+  const existingCredential = await credentialRepository.findOne({
+    where: { username },
+  });
+
+  if (!existingCredential) {
+    return null; 
   }
 
-  try {
-    // Cambiado findOneBy() por findOne() con where: {}
-    const credential = await credentialRepository.findOne({
-      where: { username: credentialData.username, password: credentialData.password },
-    });
-
-    return credential ? credential.id : null;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error validating credentials.");
+  if (existingCredential.password === password) {
+    return existingCredential; 
+  } else {
+    return null; 
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { AppDataSource } from "../config/data-source";
-// import { Credentials } from "../entities/Credentials"; // Asegúrate de que la entidad de Credential esté bien definida en entities
-// import ICredential from "../interfaces/ICredential";
-
-// // Obtener el repositorio de Credential
-// const credentialRepository = AppDataSource.getRepository(Credentials);
-
-// export const createCredentialService = async (
-//   username: string,
-//   password: string
-// ): Promise<number> => {
-//   if (!username || !password) {
-//     throw new Error("Username and password are required.");
-//   }
-
-//   try {
-//     // Creamos una nueva credencial
-//     const newCredential = credentialRepository.create({
-//       username,
-//       password,
-//     });
-
-//     // Guardamos la credencial en la base de datos
-//     await credentialRepository.save(newCredential);
-
-//     return newCredential.id;
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error("Error creating credential.");
-//   }
-// };
-
-// export const validateCredentialService = async (
-//   username: string,
-//   password: string
-// ): Promise<number | null> => {
-//   if (!username || !password) {
-//     throw new Error("Username and password are required.");
-//   }
-
-//   try {
-//     // Buscamos la credencial en la base de datos
-//     const credential = await credentialRepository.findOneBy({
-//       username,
-//       password,
-//     });
-
-//     return credential ? credential.id : null;
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error("Error validating credentials.");
-//   }
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

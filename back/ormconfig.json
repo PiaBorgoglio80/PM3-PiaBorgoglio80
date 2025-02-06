@@ -1,0 +1,19 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "Qazw2344",  
+    "database": "typeorm",  
+    "entities": [
+      "src/entities/**/*.ts"
+    ],
+    "migrations": [
+      "src/migrations/**/*.ts"
+    ],
+    "cli": {
+      "migrationsDir": "src/migrations"
+    },
+    "synchronize": false  
+  }
+  

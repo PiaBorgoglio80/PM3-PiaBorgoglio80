@@ -1,62 +1,35 @@
-import { useState } from "react";
-import misTurnos from "../helpers/misTurnos";
+import { useEffect } from "react";
+import { useUser } from "../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 import Turno from "../components/Turno/Turno";
 
 const MisTurnos = () => {
-    const [turnos, setTurnos] = useState(misTurnos);
+  const { user, userAppointments } = useUser();
+  const navigate = useNavigate();
 
-    return (
-        <>
-            <h1>Mis Turnos</h1>
-            <h3>Estos son los turnos del usuario:</h3>
-            <div>
-                {turnos.map(turno => (
-                    <Turno 
-                        key={turno.id} 
-                        id={turno.id} 
-                        date={turno.date} 
-                        time={turno.time} 
-                        description={turno.description} 
-                    />
-                ))}
-            </div>
-        </>
-    );
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  return (
+    <>
+      <h1>Mis Turnos</h1>
+      {userAppointments && userAppointments.length > 0 ? (        userAppointments.map((turno) => (
+          <Turno
+            key={turno.id}
+            id={turno.id}
+            date={turno.date}
+            time={turno.time}
+            description={turno.description || "Sin descripción"}
+          />
+        ))
+      ) : (
+        <p>No tienes turnos agendados.</p>
+      )}
+    </>
+  );
 };
 
 export default MisTurnos;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-// 
-//  const Misturnos = () => {
-//     return(
-//         <>
-//         <h1>Esta en la vista de mis turnos</h1>
-//         </>
-//     );
-// };
-
-// export default Misturnos; 

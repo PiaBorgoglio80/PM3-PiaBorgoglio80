@@ -1,17 +1,26 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
-import { User } from "./User";
+import { User } from "./User";  
 
 @Entity({ name: "credentials" })
 export class Credentials {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ unique: true })
-    username: string;
+  @Column({ unique: true })
+  username: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @OneToOne(() => User, (user) => user.credentialsId)
-    user: User;
+  @OneToOne(() => User, (user) => user.credentials)
+  user: User;  
 }
+
+
+
+
+
+
+
+
+
