@@ -1,13 +1,14 @@
 import { Router } from "express";
-import usersRoutes from "./usersRoutes";
-import appointmentsRoutes from "./appointmentsRoutes";
-import credentialsRoutes from "./credentialsRoutes"; 
+import usersRoutes from "./userRouter";
+import appointmentRouter from "./appointmentRouter";
+import credentialRouter from "./credentialRouter"; 
+import userRouter from "./userRouter";
 
 const router: Router = Router();
 
-router.use("/users", usersRoutes); 
-router.use("/appointments", appointmentsRoutes); 
-router.use("/credentials", credentialsRoutes); 
+router.use("/users", userRouter); 
+router.use("/appointments", appointmentRouter); 
+router.use("/credentials", credentialRouter); 
 
 export default router;
 

@@ -1,58 +1,65 @@
-import { AppDataSource } from "../config/data-source";
-import { Appointment } from "../entities/Appointments"; 
-import { AppointmentDto } from "../dto/AppointmentDto"; 
+import { AppointmentRegisterDto } from "../dto/AppointmentDto";
+import { IAppointment } from "../interfaces/IAppointments";
+import { AppointmentRepository } from "../repositories/AppointmentRepository";
+import { getUserByIdService } from "./userService";
+import { Status } from "../interfaces/IAppointments";
+import { Appointment } from "../entities/Appoiintment.Entity";
 
-const appointmentRepository = AppDataSource.getRepository(Appointment);
 
-export const getAppointmentsService = async (): Promise<Appointment[]> => {
-  return appointmentRepository.find(); 
-};
 
-export const getAppointmentByIdService = async (id: number): Promise<Appointment | null> => {
-  const appointment = await appointmentRepository.findOneBy({
-    id,
-  });
 
-  return appointment;
-};
 
-export const createAppointmentService = async (
-  appointmentData: AppointmentDto
-): Promise<Appointment> => {
-  try {
-    const newAppointment = appointmentRepository.create({
-      userId: appointmentData.userId,
-      date: new Date(`${appointmentData.date}T${appointmentData.time}`), 
-      status: "scheduled", 
-    });
+export const registerAppointmentService = async (appointment: AppointmentRegisterDto):Promise< Appointment> => {
 
-    await appointmentRepository.save(newAppointment);
-    return newAppointment;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error creating appointment.");
+
+
+  
+await getUserByIdService(appointment.userId.toString())
+
+AppointmentRepository.validateAllowAppointment(appointment.date, appointment.time)
+await AppointmentRepository.validateExistingAppointment(appointment.userId, appointment.date, appointment.time)
+const newAppointment = AppointmentRepository.create({
+  date: appointment.date,
+    time: appointment.time,
+    user: {id: appointment.userId}
+})
+
+return await AppointmentRepository.save(newAppointment)
+}
+
+export const getAppointmentService = async ():Promise <Appointment[]> => {
+  const appointment = await AppointmentRepository.find()
+ if(appointment.length > 0) return appointment
+ else throw new Error("No se encontraron citas")
+
+}
+
+
+export const getAppointmentByIdService = async (id: string):Promise< Appointment> => {
+
+const appointmentFound = await AppointmentRepository.findOne({
+  where:{
+    id: parseInt(id, 10)
   }
-};
+})
 
-export const cancelAppointmentService = async (id: number): Promise<void> => {
-  const appointment = await appointmentRepository.findOneBy({ id });
-
-  if (!appointment) {
-    throw new Error(`Appointment with ID ${id} not found.`);
-  }
-
-  appointment.status = "cancelled"; 
-  await appointmentRepository.save(appointment);
-};
+if(!appointmentFound) throw new Error ( `La cita con ${id} no fue encontrada`)
+  else return appointmentFound
+}
 
 
+export const cancelStatusAppointmentService = async(id: string):Promise <Appointment> => {
 
-
-
-
-
-
-
+  const appointmentFound = await AppointmentRepository.findOne({
+    where:{
+      id: parseInt(id, 10)
+    }
+  })
+  
+  if(!appointmentFound) throw new Error ( `La cita con ${id} no fue encontrada`)
+  appointmentFound.status = Status.Cancelled
+return await AppointmentRepository.save(appointmentFound)
+}
 
 
 

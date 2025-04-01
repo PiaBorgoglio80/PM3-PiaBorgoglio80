@@ -1,0 +1,31 @@
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.welcomeTitle{
+    font-size: 5.5rem;
+    color: #22577a;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.welcomeMessage {
+    font-size: 2.5rem;
+    color: #1cb472;
+    margin: 10px 0;
+}
+
+.link{
+    margin: 0 10px;
+    text-decoration: underline;
+    color: #22577a;
+}
+
+.link:hover {
+    color: #57cc99; 
+}

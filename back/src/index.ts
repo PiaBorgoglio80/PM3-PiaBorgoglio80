@@ -1,41 +1,79 @@
-import express from "express";
-import cors from "cors";  
-import { AppDataSource } from "./config/data-source";
-import userRoutes from "./routes/usersRoutes";  
 import 'reflect-metadata';
-import credentialsRouter from "./routes/credentialsRoutes"; 
-import appointmentsRouter from "./routes/appointmentsRoutes"; 
+import server from "./server";
 
-const app = express();
+const initializeApp = async () => {
+  try {
+    const { PORT } = await import('./config/envs');  
+    const { AppDataSource } = await import('./config/data-source');  
+    await AppDataSource.initialize();
+    console.log("Database connection successful");
 
-const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"], 
+    server.listen(PORT, () => {
+      console.log(`Server listening on port: ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Error initializing application:", err);
+  }
 };
 
-app.use(cors(corsOptions)); 
-
-app.use(express.json()); 
-
-app.use("/credentials", credentialsRouter);  
-app.use("/appointments", appointmentsRouter); 
-
-AppDataSource.initialize()
-  .then(() => {
-    console.log("Conexión a la base de datos realizada con éxito");
-    app.listen(3001, () => { 
-      console.log("Servidor escuchando en el puerto 3001");
-    });
-  })
-  .catch((error) => {
-    console.log("Error al conectar con la base de datos:", error);
-  });
+initializeApp();
 
 
 
 
 
 
+
+// import 'reflect-metadata';
+// import { PORT } from "./config/envs";
+// import server from "./server";
+
+// const initializeApp = async () => {
+//   try {
+//     const { AppDataSource } = await import('./config/data-source.js');
+//     await AppDataSource.initialize();
+    
+//     console.log("Database connection successful");
+    
+//     server.listen(PORT, () => {
+//       console.log(`Server listening on port: ${PORT}`);
+//     });
+//   } catch (err) {
+//     console.error("Error initializing database:", err);
+//   }
+// };
+
+// initializeApp();
+
+
+
+
+
+
+// import { AppDataSource } from "./config/data-source";
+// import { PORT } from "./config/envs";
+//   import server from "./server";
+//   import 'reflect-metadata';
+
+
+
+  
+//   AppDataSource .initialize()
+//   .then(() =>{
+  
+//     console.log("Database connection successfull")
+
+//  server.listen(PORT, () => {
+//    console.log(`Server listen on port: ${PORT} `) 
+//   })
+
+//   })
+//   .catch((err) => {
+//     console.log(err); 
+//   })
+
+
+ 
+  
 
 

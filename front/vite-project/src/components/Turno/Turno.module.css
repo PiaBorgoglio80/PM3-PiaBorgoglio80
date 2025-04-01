@@ -1,0 +1,82 @@
+.appointmentCard {
+    background-color: #57CC99;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px regb(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.appointmentCard:hover{
+    box-shadow: 0 15px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.appointmentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.appointmentDetails {
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.appointmentDetails p {
+    margin: 0px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.appointmentDetails strong {
+    color: #22577A;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.appointmentDetails span {
+    font-weight: 500;
+    color: #333;
+    background-color: #f1f1f1;
+    padding: 1px 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    margin-bottom: 4px;
+}
+
+.statusActive {
+    background-color: #38A3A5;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+.statusInactive {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+
+
+
+
